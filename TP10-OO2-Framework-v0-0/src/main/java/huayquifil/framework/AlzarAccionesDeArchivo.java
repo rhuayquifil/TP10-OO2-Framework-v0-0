@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
 
-public class CargarAccionesDeArchivo implements CargarAcciones {
+public class AlzarAccionesDeArchivo implements AlzarAcciones {
 
 	private String path;
 
-	public CargarAccionesDeArchivo(String path) {
+	public AlzarAccionesDeArchivo(String path) {
 		Objects.requireNonNull(path);
 
 		if (path.isEmpty() || path.isBlank()) {
@@ -22,11 +22,13 @@ public class CargarAccionesDeArchivo implements CargarAcciones {
 	}
 
 	@Override
-	public HashMap<Integer, Accion> llenar() {
+	public HashMap<Integer, Accion> alzar() {
 		Properties properties = new Properties();
 
 		HashMap<Integer, Accion> lista = new HashMap<>();
 
+		// lee el archivo de properties y va generando la lista con todas las
+		// implementaciones propias del usuario del framework
 		try (InputStream config = getClass().getResourceAsStream(this.path);) {
 			properties.load(config);
 
