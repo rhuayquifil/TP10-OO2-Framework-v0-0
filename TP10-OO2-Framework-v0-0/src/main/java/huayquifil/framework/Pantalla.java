@@ -2,6 +2,7 @@ package huayquifil.framework;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -44,58 +45,44 @@ public class Pantalla {
 		Panel panel = new Panel();
 		CheckBox check = null;
 		for (Accion accion : listaAcciones) {
+			// creo y agrego el check a el panel
 			check = new CheckBox(accion.nombreItemMenu());
 			panel.addComponent(check);
-
-			if (check.isChecked()) {
-				accion.ejecutar();
-			}
-
-//			panel.addComponent(new CheckBox("check"));
-//			panel.addComponent(new Button(accion.nombreItemMenu(), new Runnable() {
-//				public void run() {
-//					accion.ejecutar();
-//				}
-//			}));
 
 			panel.addComponent(new Label(accion.descripcionItemMenu())).setLayoutData(
 					GridLayout.createLayoutData(GridLayout.Alignment.BEGINNING, GridLayout.Alignment.END));
 		}
 
-		List<AdapterRun> listaAdapters = new ArrayList<>();
-
-//		List<Callable<Accion>> tareas = new ArrayList<>();
-
 		panel.addComponent(new Button("Confirmar", new Runnable() {
 			public void run() {
-//				accion.ejecutar();
+
+				List<Callable<AdapterRun>> listaAccionesSeleccionadas = new ArrayList<Callable<AdapterRun>>();
+
 				int i = 0;
 				for (Component component : panel.getChildren()) {
 					if (component instanceof CheckBox) {
 						CheckBox check = (CheckBox) component;
 						if (check.isChecked()) {
-//							listaAcciones.get(i).ejecutar();
-							listaAdapters.add(new AdapterRun(listaAcciones.get(i)));
-//							tareas.add(new AdapterRun(listaAcciones.get(i)));
-
+							Callable<AdapterRun> accionAdapter = new AdapterRun(listaAcciones.get(i));
+							listaAccionesSeleccionadas.add(accionAdapter);
 						}
 						i++;
 					}
 				}
 
+				ExecutorService executor = Executors.newFixedThreadPool(1);
+
+				try {
+					executor.invokeAll(listaAccionesSeleccionadas);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				executor.shutdown();
+
 			}
 		}));
-
-		ExecutorService executor = Executors.newFixedThreadPool(2);
-
-		try {
-			executor.invokeAll(tareas);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		executor.shutdown();
 
 		window.setComponent(panel);
 		textGUI.addWindowAndWait(window);

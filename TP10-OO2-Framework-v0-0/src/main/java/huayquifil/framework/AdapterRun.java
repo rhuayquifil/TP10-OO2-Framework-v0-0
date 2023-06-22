@@ -1,8 +1,9 @@
 package huayquifil.framework;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
-public class AdapterRun implements Callable<Accion> {
+public class AdapterRun implements Callable {
 
 	private Accion accion;
 
@@ -11,8 +12,9 @@ public class AdapterRun implements Callable<Accion> {
 	}
 
 	@Override
-	public Accion call() throws Exception {
+	public Object call() throws Exception {
 		// TODO Auto-generated method stub
+		TimeUnit.MILLISECONDS.sleep(2000);
 		this.accion.ejecutar();
 		return null;
 	}
