@@ -1,8 +1,6 @@
 package huayquifil.framework;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
 public class Framework {
@@ -19,15 +17,14 @@ public class Framework {
 	public void init() {
 
 		// alza las acciones
-		listaAcciones = acciones.alzar();
+//		listaAcciones = acciones.alzar();
 
 		// alza tambien la accion de salir
-		listaAcciones.put(listaAcciones.size(), new AccionSalir());
+//		listaAcciones.put(listaAcciones.size(), new AccionSalir());
 
-		this.pantallaLanterna = new Pantalla(arraylistDeAcciones());
+		this.pantallaLanterna = new Pantalla(acciones);
+//		this.pantallaLanterna = new Pantalla(arraylistDeAcciones(), acciones.alzarMaxThreads());
 		this.pantallaLanterna.mostrar();
-
-		// TENES QUE HACER UN NUEVO PROYECTO Y USAR EL FRAMEWORK MODIFICADO
 
 //		// crea al menu
 //		System.out.println("Bienvenido, Que desea hacer?");
@@ -50,12 +47,12 @@ public class Framework {
 //		}
 	}
 
-	private List<Accion> arraylistDeAcciones() {
-		ArrayList<Accion> acciones = new ArrayList<>();
-
-		for (int i = 0; i < listaAcciones.size(); i++) {
-			acciones.add(listaAcciones.get(i));
-		}
-		return acciones;
-	}
+//	private List<Accion> arraylistDeAcciones() {
+//		ArrayList<Accion> acciones = new ArrayList<>();
+//
+//		for (int i = 0; i < listaAcciones.size(); i++) {
+//			acciones.add(listaAcciones.get(i));
+//		}
+//		return acciones;
+//	}
 }

@@ -1,6 +1,7 @@
 package huayquifil.framework;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +11,8 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -43,6 +46,7 @@ public class AlzarAccionesDeArchivo implements AlzarAcciones {
 	}
 
 	private HashMap<Integer, Accion> alzarDeArchivoJSON(HashMap<Integer, Accion> lista) {
+
 		Gson gson = new GsonBuilder().create();
 		int i = 0;
 
@@ -96,5 +100,28 @@ public class AlzarAccionesDeArchivo implements AlzarAcciones {
 		}
 
 		return lista;
+	}
+
+	@Override
+	public int alzarMaxThreads() {
+
+		if (isJSONFile()) {
+			try {
+				ObjectMapper objectMapper = new ObjectMapper();
+
+				// Lee el archivo JSON y obtén un objeto JsonNode
+				JsonNode rootNode = objectMapper.readTree(new File(this.filePath));
+
+				// Extrae el valor entero
+				int valorEntero = rootNode.get("max-threads").asInt();
+
+				return valorEntero;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+//		throw new RuntimeErrorException(null, "no se encontro el valor: max-threads");
+		return -1;
 	}
 }
