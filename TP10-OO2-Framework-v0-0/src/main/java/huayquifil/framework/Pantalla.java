@@ -88,18 +88,31 @@ public class Pantalla {
 				int i = 0;
 				for (Component component : panel.getChildren()) {
 
-					if (component instanceof CheckBox) {
-						CheckBox check = (CheckBox) component;
-
-						if (check.isChecked()) {
-							// se crea un adaptador de la accion y se agrega a la lista
-							Callable<AdapterRun> accionAdapter = new AdapterRun(listaAcciones.get(i));
-							listaAccionesSeleccionadas.add(accionAdapter);
-						}
-						i++;
-					}
+					i = verificarCheck(listaAccionesSeleccionadas, i, component);
 				}
 
+				// se ejecutan las acciones
+				ejecutarAcciones(listaAccionesSeleccionadas);
+
+			}
+
+			private int verificarCheck(List<Callable<AdapterRun>> listaAccionesSeleccionadas, int i,
+					Component component) {
+
+				if (component instanceof CheckBox) {
+					CheckBox check = (CheckBox) component;
+
+					if (check.isChecked()) {
+						// se crea un adaptador de la accion y se agrega a la lista
+						Callable<AdapterRun> accionAdapter = new AdapterRun(listaAcciones.get(i));
+						listaAccionesSeleccionadas.add(accionAdapter);
+					}
+					i++;
+				}
+				return i;
+			}
+
+			private void ejecutarAcciones(List<Callable<AdapterRun>> listaAccionesSeleccionadas) {
 				try {
 					if (acciones.alzarMaxThreads() == -1) {
 						for (Callable<AdapterRun> callable : listaAccionesSeleccionadas) {
@@ -115,7 +128,6 @@ public class Pantalla {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
 			}
 		}));
 
